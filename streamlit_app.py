@@ -7,10 +7,6 @@ st.title("Data App Assignment, on June 20th")
 
 st.write("### Input Data and Examples")
 df = pd.read_csv("Superstore_Sales_utf8.csv", parse_dates=True)
-
-# Display the column names for debugging
-st.write("Column names in the dataset:", df.columns.tolist())
-
 st.dataframe(df)
 
 # This bar chart will not have solid bars--but lines--because the detail data is being graphed independently
@@ -23,8 +19,8 @@ st.bar_chart(df.groupby("Category", as_index=False).sum(), x="Category", y="Sale
 
 # Aggregating by time
 # Here we ensure Order_Date is in datetime format, then set is as an index to our dataframe
-df["Order Date"] = pd.to_datetime(df["Order Date"])
-df.set_index('Order Date', inplace=True)
+df["Order_Date"] = pd.to_datetime(df["Order_Date"])
+df.set_index('Order_Date', inplace=True)
 # Here the Grouper is using our newly set index to group by Month ('M')
 sales_by_month = df.filter(items=['Sales']).groupby(pd.Grouper(freq='M')).sum()
 
@@ -35,7 +31,7 @@ st.line_chart(sales_by_month, y="Sales")
 
 st.write("## Your additions")
 st.write("### (1) add a drop down for Category (https://docs.streamlit.io/library/api-reference/widgets/st.selectbox)")
-st.write("### (2) add a multi-select for Sub-Category *in the selected Category (1)* (https://docs.streamlit.io/library/api-reference/widgets/st.multiselect)")
+st.write("### (2) add a multi-select for Sub_Category *in the selected Category (1)* (https://docs.streamlit.io/library/api-reference/widgets/st.multiselect)")
 st.write("### (3) show a line chart of sales for the selected items in (2)")
 st.write("### (4) show three metrics (https://docs.streamlit.io/library/api-reference/data/st.metric) for the selected items in (2): total sales, total profit, and overall profit margin (%)")
 st.write("### (5) use the delta option in the overall profit margin metric to show the difference between the overall average profit margin (all products across all categories)")
@@ -43,13 +39,13 @@ st.write("### (5) use the delta option in the overall profit margin metric to sh
 # Addition 1: Drop down for Category
 category = st.selectbox("Select a Category", df["Category"].unique())
 
-# Addition 2: Multi-select for Sub-Category in the selected Category
-sub_categories = df[df["Category"] == category]["Sub-Category"].unique()
-selected_sub_categories = st.multiselect("Select Sub-Categories", sub_categories)
+# Addition 2: Multi-select for Sub_Category in the selected Category
+sub_categories = df[df["Category"] == category]["Sub_Category"].unique()
+selected_sub_categories = st.multiselect("Select Sub_Categories", sub_categories)
 
 if selected_sub_categories:
     # Filter the dataframe based on selected sub-categories
-    filtered_df = df[(df["Category"] == category) & (df["Sub-Category"].isin(selected_sub_categories))]
+    filtered_df = df[(df["Category"] == category) & (df["Sub_Category"].isin(selected_sub_categories))]
 
     # Addition 3: Line chart of sales for the selected items in (2)
     sales_by_month_filtered = filtered_df.filter(items=['Sales']).groupby(pd.Grouper(freq='M')).sum()
